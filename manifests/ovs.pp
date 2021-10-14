@@ -9,6 +9,8 @@
 #   (Optional) State of the openvswitch package
 #   Defaults to 'present'.
 #
+# [*package_name*]
+#
 # [*dkms_ensure*]
 #   (optional) on debian/wheezy, ubuntu/precise, ubuntu/trusty and
 #   ubuntu/utopic dkms (Dynamic Kernel Module Support) is used to
@@ -35,6 +37,7 @@
 #
 class vswitch::ovs(
   $package_ensure    = 'present',
+  $package_name      = $::vswitch::params::ovs_package_name,
   $dkms_ensure       = false,
   $enable_hw_offload = false,
   $disable_emc       = false,
@@ -128,7 +131,7 @@ class vswitch::ovs(
     Service['ovsdb-server'] ~> Service['openvswitch']
   }
 
-  package { $::vswitch::params::ovs_package_name:
+  package { $package_name:
     ensure => $package_ensure,
     before => Service['openvswitch'],
     tag    => 'openvswitch',
